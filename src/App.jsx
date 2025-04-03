@@ -116,7 +116,7 @@ export default function App() {
             <input
               className="input-field"
               type="text"
-              placeholder="URL del file jsons"
+              placeholder="URL del file json"
               value={jsonPath}
               onChange={(e) => setJsonPath(e.target.value)}
             />
