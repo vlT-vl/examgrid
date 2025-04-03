@@ -1,0 +1,21 @@
+{
+  "name": "examgrid",
+  "version": "0.0.1",
+  "build": "R001-03042025",
+  "description": "fronted per esami professionali vlT",
+  "license": "MIT",
+  "author": "Copyright © 2025 vlT di Veronesi Lorenzo",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.0.0",
+    "vite": "^4.0.0"
+  }
+}
