@@ -4,6 +4,7 @@ import QuestionCard from "./components/QuestionCard.jsx";
 import Timer from "./components/Timer.jsx";
 import ElapsedTimer from "./components/ElapsedTimer.jsx";
 import Summary from "./components/Summary.jsx";
+import pkgjson from "../package.json"
 import "./styles.css";
 
 const shuffleArray = (arr) => arr.sort(() => Math.random() - 0.5);
@@ -13,16 +14,19 @@ export default function App() {
   const [examTitle, setExamTitle] = useState("");
   const [candidateName, setCandidateName] = useState("");
   const [inputName, setInputName] = useState("");
-  const [jsonPath, setJsonPath] = useState("");
   const [jsonToken, setJsonToken] = useState("");
+  const [examsList, setExamsList] = useState([]);
+  const [selectedExamUrl, setSelectedExamUrl] = useState("");
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedAnswers, setSelectedAnswers] = useState({});
   const [isExamFinished, setIsExamFinished] = useState(false);
   const [correctCount, setCorrectCount] = useState(0);
   const [elapsedTime, setElapsedTime] = useState(0);
   const [remainingTime, setRemainingTime] = useState(120 * 60);
+  const [examDuration, setExamDuration] = useState(120); // default fallback
   const [showError, setShowError] = useState(false);
   const [theme, setTheme] = useState("light");
+  const [showInfo, setShowInfo] = useState(false);
 
   const toggleTheme = () => {
     setTheme((prev) => (prev === "light" ? "dark" : "light"));
@@ -31,6 +35,13 @@ export default function App() {
   useEffect(() => {
     document.body.className = theme;
   }, [theme]);
+
+  useEffect(() => {
+    fetch("https://raw.githubusercontent.com/vlT-vl/examgrid/refs/heads/exam/.index.json")
+      .then(res => res.json())
+      .then(setExamsList)
+      .catch(err => console.error("Errore caricamento exams list:", err));
+  }, []);
 
   const handleAnswerChange = (questionIndex, answer) => {
     const prevAnswers = selectedAnswers[questionIndex] || [];
@@ -81,7 +92,7 @@ export default function App() {
 
   const loadEncryptedJson = async () => {
     try {
-      const parsed = await jsonparse(jsonPath, jsonToken);
+      const parsed = await jsonparse(selectedExamUrl, jsonToken);
       const randomized = shuffleArray([...parsed.questions])
         .slice(0, 70)
         .map((q) => ({
@@ -91,6 +102,8 @@ export default function App() {
       setQuestions(randomized);
       setExamTitle(parsed.title);
       setCandidateName(inputName.trim());
+      setExamDuration(parsed.time || 120); // <-- usa tempo dal file, fallback 120
+      setRemainingTime((parsed.time || 120) * 60);
     } catch (err) {
       alert(`Errore caricamento quiz: ${err.message}`);
     }
@@ -113,23 +126,36 @@ export default function App() {
               value={inputName}
               onChange={(e) => setInputName(e.target.value)}
             />
-            <input
+
+            <select
               className="input-field"
-              type="text"
-              placeholder="URL del file json"
-              value={jsonPath}
-              onChange={(e) => setJsonPath(e.target.value)}
-            />
+              value={selectedExamUrl}
+              onChange={(e) => setSelectedExamUrl(e.target.value)}
+            >
+              <option value="">Seleziona un esame</option>
+              {examsList.map((exam, i) => (
+                <option key={i} value={exam.url}>
+                  {exam.label}
+                </option>
+              ))}
+            </select>
+
             <input
               className="input-field"
               type="password"
-              placeholder="Token/Password di accesso"
+              placeholder="Token di accesso"
               value={jsonToken}
               onChange={(e) => setJsonToken(e.target.value)}
             />
-            <button className="btn-dark" onClick={loadEncryptedJson}>
+
+            <button className="btn-dark" onClick={loadEncryptedJson} disabled={!selectedExamUrl}>
               Carica e Avvia Esame
             </button>
+
+            <button className="btn-info" onClick={() => setShowInfo(true)}>
+              info
+            </button>
+
             <div className="theme-toggle">
               <label className="switch">
                 <input type="checkbox" onChange={toggleTheme} />
@@ -158,7 +184,7 @@ export default function App() {
           <h1 className="exam-title">{examTitle}</h1>
           <div className="flex justify-between items-center mb-3">
             <Timer
-              duration={120 * 60}
+              duration={examDuration * 60}
               onTimeUp={finishExam}
               onTick={(sec) => setRemainingTime(sec)}
             />
@@ -191,6 +217,19 @@ export default function App() {
                 Termina Esame
               </button>
             )}
+          </div>
+        </div>
+      )}
+
+      {showInfo && (
+        <div className="info-popup">
+          <div className="info-content">
+            <h3>examgrid</h3>
+            <p>versione: <strong>{pkgjson.version}</strong></p>
+            <p>build: <strong>{pkgjson.build}</strong></p>
+            <p>ultimo aggiornamento: <strong>{pkgjson.updated}</strong></p>
+            <p><strong>Copyright © 2025 vIT di Veronesi Lorenzo</strong></p>
+            <button className="btn" onClick={() => setShowInfo(false)}>Chiudi</button>
           </div>
         </div>
       )}

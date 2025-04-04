@@ -7,7 +7,7 @@ export default function ElapsedTimer({ onTick }) {
     const timer = setInterval(() => {
       setElapsedSeconds((prev) => {
         const next = prev + 1;
-        if (onTick) onTick(next); // ✅ notifica il padre (App)
+        if (onTick) onTick(next);
         return next;
       });
     }, 1000);

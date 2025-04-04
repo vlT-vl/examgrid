@@ -1,7 +1,8 @@
 {
   "name": "examgrid",
-  "version": "0.0.1",
-  "build": "R001-03042025",
+  "version": "0.0.2",
+  "build": "R002-04042025",
+  "updated": "04 Aprile 2025",
   "description": "fronted per esami professionali vlT",
   "license": "MIT",
   "author": "Copyright © 2025 vlT di Veronesi Lorenzo",
