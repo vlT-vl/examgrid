@@ -1,0 +1,117 @@
+
+.al-root {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: inherit;
+}
+
+.al-icon {
+  width: 38px;
+  height: 38px;
+  flex-shrink: 0;
+  color: #282828;
+}
+
+body.dark .al-icon {
+  color: #ffffff;
+}
+
+.al-lg {
+  gap: 0.75rem;
+}
+
+.al-lg .al-icon {
+  width: 68px;
+  height: 68px;
+}
+
+.al-lg .al-wordmark {
+  font-size: 1.9rem;
+}
+
+.al-frame {
+  stroke-dasharray: 70;
+  stroke-dashoffset: 70;
+  animation: al-draw 0.36s ease-out both;
+}
+
+.al-line-1 {
+  stroke-dasharray: 19.97;
+  stroke-dashoffset: 19.97;
+  animation: al-draw 0.21s ease-out 0.3s both;
+}
+
+.al-line-2 {
+  stroke-dasharray: 9.97;
+  stroke-dashoffset: 9.97;
+  animation: al-draw 0.15s ease-out 0.45s both;
+}
+
+.al-line-3 {
+  stroke-dasharray: 19.98;
+  stroke-dashoffset: 19.98;
+  animation: al-draw 0.21s ease-out 0.57s both;
+}
+
+.al-line-4 {
+  stroke-dasharray: 9.98;
+  stroke-dashoffset: 9.98;
+  animation: al-draw 0.15s ease-out 0.72s both;
+}
+
+@keyframes al-draw {
+  to { stroke-dashoffset: 0; }
+}
+
+.al-pencil {
+  opacity: 0;
+  animation: al-fade-in 0.21s ease-out 0.87s both;
+}
+
+@keyframes al-fade-in {
+  to { opacity: 1; }
+}
+
+.al-wordmark {
+  display: inline-flex;
+  font-family: 'Nasalization', sans-serif;
+  font-size: 1.3rem;
+  letter-spacing: 0.5px;
+  color: inherit;
+}
+
+.al-letter {
+  display: inline-block;
+  opacity: 0;
+  transform: translateX(-10px);
+  animation: al-letter-in 0.24s ease-out both;
+}
+
+@keyframes al-letter-in {
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@media (max-width: 360px) {
+  .al-wordmark {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .al-frame,
+  .al-line-1,
+  .al-line-2,
+  .al-line-3,
+  .al-line-4,
+  .al-pencil,
+  .al-letter {
+    animation: none;
+    stroke-dashoffset: 0;
+    opacity: 1;
+    transform: none;
+  }
+}

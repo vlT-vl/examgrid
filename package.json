@@ -1,0 +1,25 @@
+{
+  "name": "examgrid",
+  "version": "0.1.0",
+  "build": "R011026",
+  "updated": "1 October 2026",
+  "ibuild": "R250926",
+  "description": "frontend per esami professionali vlT",
+  "author": "Veronesi Lorenzo © 2026 vlT - vl.TECH",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0",
+    "react-icons": "^5.7.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^6.1.1",
+    "vite": "^8.3.1"
+  }
+}
