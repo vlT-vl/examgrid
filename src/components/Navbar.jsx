@@ -6,11 +6,22 @@ import {
   HiOutlineSun,
   HiOutlineMoon,
 } from "react-icons/hi2";
+import { TbReport } from "react-icons/tb";
 import AnimatedLogo from "./AnimatedLogo.jsx";
 import LanguageToggle from "./LanguageToggle.jsx";
 import { useLang } from "../uiText.jsx";
 
-export default function Navbar({ username, avatarUrl, onHome, onLogout, onInfo, theme, toggleTheme }) {
+export default function Navbar({
+  username,
+  avatarUrl,
+  onHome,
+  onLogout,
+  onInfo,
+  onHistory,
+  historyCount,
+  theme,
+  toggleTheme,
+}) {
   const { t } = useLang();
   const [avatarFailed, setAvatarFailed] = useState(false);
 
@@ -33,8 +44,19 @@ export default function Navbar({ username, avatarUrl, onHome, onLogout, onInfo, 
           {theme === "dark" ? <HiOutlineSun aria-hidden="true" /> : <HiOutlineMoon aria-hidden="true" />}
         </button>
 
-        <button className="navbar-icon-btn" onClick={onInfo} type="button" aria-label={t("nav.info")}>
+        <button className="navbar-icon-btn navbar-info-btn" onClick={onInfo} type="button" aria-label={t("nav.info")}>
           <HiOutlineInformationCircle aria-hidden="true" />
+        </button>
+
+        <button
+          className="navbar-icon-btn navbar-history-btn"
+          onClick={onHistory}
+          type="button"
+          aria-label={t("nav.history")}
+          title={t("nav.history")}
+        >
+          <TbReport aria-hidden="true" />
+          {historyCount > 0 && <span className="navbar-history-count">{historyCount > 99 ? "99+" : historyCount}</span>}
         </button>
 
         <span className="navbar-user">
@@ -51,9 +73,9 @@ export default function Navbar({ username, avatarUrl, onHome, onLogout, onInfo, 
           <span className="navbar-username-text">{username}</span>
         </span>
 
-        <button className="navbar-logout" onClick={onLogout} type="button">
+        <button className="navbar-logout" onClick={onLogout} type="button" aria-label={t("nav.logout")}>
           <HiOutlineArrowRightOnRectangle aria-hidden="true" />
-          {t("nav.logout")}
+          <span className="navbar-logout-text">{t("nav.logout")}</span>
         </button>
       </div>
     </nav>

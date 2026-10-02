@@ -2,6 +2,30 @@
 
 Le funzionalità principali dell'app, in ordine cronologico inverso.
 
+## 2026-10-02
+
+- Portale reso davvero fruibile su mobile: la navbar non si sovrapponeva più a se stessa su gran parte degli smartphone e la griglia esami poteva traboccare oltre il bordo dello schermo sui telefoni più piccoli — entrambi corretti.
+- Il pulsante "Termina esame", durante lo svolgimento, ora porta sempre al riepilogo con l'esito e il punteggio calcolati sulle risposte date fino a quel momento, invece di scartare tutto e tornare al dettaglio esame.
+- Schermata d'esame allargata ulteriormente sugli schermi grandi, con più respiro dal bordo superiore e anche in verticale (padding e righe delle risposte più ariose); stesso trattamento, più contenuto, per la pagina di dettaglio esame.
+- La pillola "Termina esame" ora è un vero bottone (bordo e sfondo al passaggio del mouse), non più solo testo colorato.
+- Corretto un difetto per cui, se il tempo scadeva mentre la domanda in corso non era ancora stata risposta per intero, l'esame non si chiudeva sul riepilogo come dovrebbe: ora, allo scadere del tempo, si passa sempre al report con l'esito calcolato sulle risposte date.
+- Il popup di conferma di "Termina esame" non è più il dialogo grezzo del browser: ora è un modale in stile con il resto dell'app.
+- Nella barra in alto durante l'esame, accanto al titolo sono comparse l'icona del vendor e una pillola col codice esame, stesso stile già usato nel report di riepilogo.
+- Sistemato lo squilibrio visivo nella barra in alto durante l'esame: tempo rimanente e tempo trascorso ora hanno la stessa tipografia (prima uno era un numero grande in grassetto, l'altro testo piccolo grigio), e la pillola "Termina esame" ha un'icona X più in linea con lo stile dell'app.
+- Corretto un difetto per cui, dopo l'introduzione della nuova schermata di apertura animata, il login a volte non compariva più e l'app restava bloccata su schermo vuoto.
+- Rifinito lo sfondo di login e schermata di apertura: sfumatura diagonale verso il verde, chiaro/scuro per quasi tutta la larghezza e verde solo nell'ultimo tratto, senza elementi decorativi aggiuntivi.
+- Corretto il selettore tema nel login: icona e testo erano scollegati tra loro (icona e scritta descrivevano cose diverse), ora sono coerenti.
+- Rifatto lo sfondo di login e schermata di apertura sul modello dello sfondo di avvio di pmxtools: sfumatura diagonale scura/chiara con un velo verde concentrato in basso a destra.
+- Nel popup Info è comparso il logo animato vlT sopra il copyright, cliccabile verso il sito dell'autore.
+- Durante l'esame, il bottone "Avanti"/"Termina Esame" ora resta disattivato finché non si è risposto a tutte le domande richieste, invece di mostrare un messaggio d'errore dopo il click.
+- Nella pagina di dettaglio esame è comparsa la foto del candidato (quando disponibile) accanto al nome, al posto della sola icona generica.
+- Aggiornato il testo e l'aspetto dell'avviso prima di avviare l'esame: ora spiega che terminando in anticipo il risultato viene comunque calcolato sulle risposte date, con un'icona informativa e centrato.
+- Tolta dal footer la riga "Costruito con React e Vite".
+- Nella Home, su schermi larghi, la navbar, il footer e la colonna dei filtri per categoria restano ora sempre visibili: scorre solo la griglia degli esami, invece di tutta la pagina, senza mostrare una scrollbar invasiva.
+- Aggiunto nella navbar lo storico personale delle prove concluse nella sessione corrente del browser: mostra in un modale tutti i dettagli di ogni sessione, permette di riaprire report e revisione risposte, esporta l'archivio completo in JSON e può ricaricarlo in seguito unendolo alle prove già presenti e a quelle nuove, sempre separato per utente.
+- Rifinito il modale dello storico: più stretto e senza scorrimento orizzontale, ogni prova è organizzata come una scheda su due fasce da sei dati; il badge sulla navbar conta solo le sessioni nuove e scompare dopo aver aperto lo storico.
+- Disabilitata la selezione accidentale del testo nell'intera interfaccia, lasciando selezionabili il codice di richiesta voucher e il campo del voucher completo.
+
 ## 2026-10-01
 
 - Il riepilogo finale a fine esame ora entra in scena con un'animazione completa (non più statico): intestazione, dettagli, foto, esito e disclaimer compaiono in sequenza.

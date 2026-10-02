@@ -24,8 +24,9 @@ export default function ElapsedTimer({ onTick }) {
   };
 
   return (
-    <div className="elapsed-timer">
-      {t("timer.elapsed")} <strong>{formatTime(elapsedSeconds)}</strong>
+    <div className="timer">
+      <span className="timer-label">{t("timer.elapsed")}</span>
+      <span className="timer-value">{formatTime(elapsedSeconds)}</span>
     </div>
   );
 }

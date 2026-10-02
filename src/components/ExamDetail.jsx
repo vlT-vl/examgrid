@@ -3,6 +3,7 @@ import {
   HiOutlineArrowLeft,
   HiOutlineArrowPath,
   HiOutlineClock,
+  HiOutlineInformationCircle,
   HiOutlineLanguage,
   HiOutlineQuestionMarkCircle,
   HiOutlineUserCircle,
@@ -13,6 +14,7 @@ import { useLang } from "../uiText.jsx";
 export default function ExamDetail({
   exam,
   candidateName,
+  avatarUrl,
   onBack,
   onStart,
   locked,
@@ -23,6 +25,7 @@ export default function ExamDetail({
 }) {
   const { t } = useLang();
   const Icon = exam.icon;
+  const [avatarFailed, setAvatarFailed] = useState(false);
   const [showAnswers, setShowAnswers] = useState(false);
   const [randomize, setRandomize] = useState(false);
   const [rangeFrom, setRangeFrom] = useState(1);
@@ -91,8 +94,17 @@ export default function ExamDetail({
         </div>
 
         <div className="exam-detail-candidate">
-          <HiOutlineUserCircle aria-hidden="true" />
-          {t("examDetail.candidate")}: <strong>{candidateName}</strong>
+          {avatarUrl && !avatarFailed ? (
+            <img
+              className="exam-detail-candidate-avatar"
+              src={avatarUrl}
+              alt=""
+              onError={() => setAvatarFailed(true)}
+            />
+          ) : (
+            <HiOutlineUserCircle className="exam-detail-candidate-icon" aria-hidden="true" />
+          )}
+          <strong>{candidateName}</strong>
         </div>
 
         <div className="exam-detail-below">
@@ -100,7 +112,10 @@ export default function ExamDetail({
             <VoucherGate fullName={candidateName} examId={examId} />
           ) : (
             <>
-              <p className="exam-start-warning">{t("examStart.warning")}</p>
+              <p className="exam-start-warning">
+                <HiOutlineInformationCircle className="exam-start-warning-icon" aria-hidden="true" />
+                {t("examStart.warning")}
+              </p>
 
               {hasOptions && (
                 <div className="exam-start-options">

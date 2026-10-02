@@ -42,10 +42,6 @@ export default function Login({ onLogin, theme, toggleTheme }) {
     <div className="login-page">
       <LanguageToggle className="login-lang-toggle" />
 
-      <div className="login-orb login-orb--1" aria-hidden="true" />
-      <div className="login-orb login-orb--2" aria-hidden="true" />
-      <div className="login-orb login-orb--3" aria-hidden="true" />
-
       <div className={`login-card${shaking ? " is-shaking" : ""}`}>
         <AnimatedLogo className="login-logo al-lg" />
         <h1 className="login-title">{t("login.welcome")}</h1>
@@ -97,7 +93,7 @@ export default function Login({ onLogin, theme, toggleTheme }) {
           aria-label={theme === "dark" ? t("theme.switchToLight") : t("theme.switchToDark")}
         >
           {theme === "dark" ? <HiOutlineSun aria-hidden="true" /> : <HiOutlineMoon aria-hidden="true" />}
-          <span>{theme === "light" ? t("theme.light") : t("theme.dark")}</span>
+          <span>{theme === "light" ? t("theme.dark") : t("theme.light")}</span>
         </button>
       </div>
     </div>

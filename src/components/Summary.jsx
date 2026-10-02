@@ -27,6 +27,7 @@ export default function Summary({
   questions,
   selectedAnswers,
   canViewAnswerReview,
+  completedAt,
   onHome,
 }) {
   const Icon = icon;
@@ -41,7 +42,7 @@ export default function Summary({
     return `${mins} ${t("summary.minutes")}${sec > 0 ? ` ${sec} ${t("summary.seconds")}` : ""}`;
   };
 
-  const now = new Date();
+  const now = completedAt ? new Date(completedAt) : new Date();
   const nowString = now.toLocaleString(lang === "it" ? "it-IT" : "en-US");
   const fileDate = now.toISOString().slice(0, 16).replace("T", "_").replace(":", "-");
   const safeName = candidate.replace(/[^a-z0-9]/gi, "_");

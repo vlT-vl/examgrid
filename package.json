@@ -1,8 +1,8 @@
 {
   "name": "examgrid",
-  "version": "0.1.0",
-  "build": "R011026",
-  "updated": "1 October 2026",
+  "version": "0.1.1",
+  "build": "R021026",
+  "updated": "2 October 2026",
   "ibuild": "R250926",
   "description": "frontend per esami professionali vlT",
   "author": "Veronesi Lorenzo © 2026 vlT - vl.TECH",

@@ -4,6 +4,7 @@ import { HiXMark } from "react-icons/hi2";
 import { FiInfo } from "react-icons/fi";
 import { SiReact, SiVite } from "react-icons/si";
 import AnimatedLogo from "./AnimatedLogo.jsx";
+import VltLogo from "./VltLogo.jsx";
 import { useLang } from "../uiText.jsx";
 import pkgjson from "../../package.json";
 
@@ -77,9 +78,19 @@ export default function VersionModal({ onClose }) {
             ))}
           </div>
 
-          <p className="vmo-notice">
-            {t("versionModal.notice")}
-            <br />
+          <p className="vmo-notice">{t("versionModal.notice")}</p>
+
+          <a
+            className="vmo-vlt-link"
+            href="https://lorenzoveronesi.it"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="lorenzoveronesi.it"
+          >
+            <VltLogo size="2.1rem" staticExpanded />
+          </a>
+
+          <p className="vmo-notice vmo-notice--copy">
             {t("footer.copyright")}. {t("versionModal.rights")}
           </p>
         </div>
