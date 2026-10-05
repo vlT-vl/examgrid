@@ -17,7 +17,7 @@ export default function Summary({
   icon,
   iconColor,
   candidate,
-  avatarUrl,
+  avatarData,
   score,
   total,
   elapsedTime,
@@ -51,18 +51,8 @@ export default function Summary({
     const container = document.querySelector(".summary-container").cloneNode(true);
 
     const photoImg = container.querySelector(".summary-photo-img");
-    if (photoImg && avatarUrl && !avatarFailed) {
-      try {
-        const res = await fetch(avatarUrl);
-        const blob = await res.blob();
-        const dataUrl = await new Promise((resolve, reject) => {
-          const reader = new FileReader();
-          reader.onload = () => resolve(reader.result);
-          reader.onerror = reject;
-          reader.readAsDataURL(blob);
-        });
-        photoImg.src = dataUrl;
-      } catch {}
+    if (photoImg && avatarData && !avatarFailed) {
+      photoImg.src = avatarData;
     }
 
     const reviewSection = document.querySelector(".review-section");
@@ -209,10 +199,10 @@ export default function Summary({
           </div>
 
           <div className="summary-photo-box">
-            {avatarUrl && !avatarFailed ? (
+            {avatarData && !avatarFailed ? (
               <img
                 className="summary-photo-img"
-                src={avatarUrl}
+                src={avatarData}
                 alt=""
                 onError={() => setAvatarFailed(true)}
               />

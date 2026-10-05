@@ -2,6 +2,17 @@
 
 Le funzionalità principali dell'app, in ordine cronologico inverso.
 
+## 2026-10-05
+
+- Le foto profilo non dipendono più da un link esterno a LinkedIn (che tra l'altro scadeva): ora arrivano già incorporate e cifrate nel registro utenti, quindi compaiono sempre — navbar, dettaglio esame, riepilogo e anche nel report HTML scaricato — senza alcun fetch a runtime verso servizi terzi.
+- Corretto un difetto serio: se l'esame era in corso e la pagina veniva ricaricata per sbaglio (o il browser si chiudeva), l'intera prova andava persa senza alcun avviso. Ora il progresso (domande, risposte date, tempo trascorso e rimanente) viene salvato automaticamente e, dopo un ricaricamento accidentale, l'esame riprende esattamente da dove era rimasto; il browser chiede inoltre conferma prima di abbandonare la pagina mentre un esame è attivo.
+- Corretto un difetto per cui i campi "Dalla domanda"/"Alla domanda" nella pagina di dettaglio esame potevano cambiare valore da soli se lo scroll del mouse/trackpad passava sopra il campo mentre questo aveva il focus (comportamento di default dei campi numerici nei browser), facendo partire l'esame su un intervallo di domande diverso da quello voluto senza che l'utente se ne accorgesse.
+- Chi ha già un voucher non deve più aprire il pannello "Richiedi voucher" per inserirlo: nella pagina di dettaglio esame è comparso un campo dedicato, sempre visibile, con lo stesso stile del riquadro del codice di richiesta (stessa cornice, stesso font monospazio, pulsante centrato sotto il campo) — il pannello di richiesta resta a parte, ancora a scomparsa, per chi deve generarne uno nuovo.
+- Corretto un difetto per cui, negli esami con molte domande, la tabella "Rivedi le risposte" del riepilogo diventava una lista lunghissima con scorrimento infinito, dando l'impressione che il report si fermasse a metà. Ora la tabella è paginata, 20 domande per pagina, con due frecce per spostarsi — stessa identica paginazione anche nel report HTML scaricabile, pienamente funzionante pure lì senza bisogno di riaprire l'app.
+- Corretto il modale Info su mobile: i campi (versione, build, data, librerie) finivano impilati in modo disomogeneo (tre campi su due colonne lasciavano l'ultimo orfano a metà riga). Ora su schermi stretti sono un'unica colonna, un campo per riga con etichetta a sinistra e valore a destra, compatti e leggibili come nella versione desktop.
+- L'icona Info nella navbar era nascosta su mobile (rimasta così da una sistemazione precedente della navbar): ora è di nuovo visibile a tutte le larghezze, come le altre icone della barra.
+- Corretto un errore che impediva di tornare alla Home dopo aver avviato un esame (residuo della migrazione delle foto profilo di qualche modifica fa): il pulsante Home in navbar restava bloccato con un errore in console invece di funzionare.
+
 ## 2026-10-02
 
 - Portale reso davvero fruibile su mobile: la navbar non si sovrapponeva più a se stessa su gran parte degli smartphone e la griglia esami poteva traboccare oltre il bordo dello schermo sui telefoni più piccoli — entrambi corretti.

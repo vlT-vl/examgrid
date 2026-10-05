@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useLang } from "../uiText.jsx";
 
-export default function ElapsedTimer({ onTick }) {
+export default function ElapsedTimer({ onTick, initialSeconds = 0 }) {
   const { t } = useLang();
-  const [elapsedSeconds, setElapsedSeconds] = useState(0);
+  const [elapsedSeconds, setElapsedSeconds] = useState(initialSeconds);
 
   useEffect(() => {
     const timer = setInterval(() => {

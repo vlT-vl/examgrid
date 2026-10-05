@@ -5,11 +5,8 @@ import { useLang } from "../uiText.jsx";
 
 export default function VoucherPanel({ fullName, examId, onClose }) {
   const { t } = useLang();
-  const { requestCodeFor, generateRequest, redeem } = useVoucher();
+  const { requestCodeFor, generateRequest } = useVoucher();
   const requestCode = requestCodeFor(examId);
-  const [code, setCode] = useState("");
-  const [redeemError, setRedeemError] = useState(null);
-  const [busy, setBusy] = useState(false);
   const [copied, setCopied] = useState(false);
 
   useEffect(() => {
@@ -23,19 +20,6 @@ export default function VoucherPanel({ fullName, examId, onClose }) {
       setTimeout(() => setCopied(false), 1600);
     } catch {
       setCopied(false);
-    }
-  };
-
-  const submitRedeem = async (e) => {
-    e.preventDefault();
-    setBusy(true);
-    const result = await redeem(code, examId);
-    setBusy(false);
-    if (result.ok) {
-      setCode("");
-      setRedeemError(null);
-    } else {
-      setRedeemError(result.reason);
     }
   };
 
@@ -69,29 +53,6 @@ export default function VoucherPanel({ fullName, examId, onClose }) {
         )}
         <p className="voucher-hint">{t("voucher.sendToBefore")}</p>
       </div>
-
-      <form className="voucher-block voucher-redeem" onSubmit={submitRedeem}>
-        <span className="voucher-label">{t("voucher.redeemLabel")}</span>
-        <div className="voucher-row">
-          <input
-            className="voucher-input voucher-input--code"
-            value={code}
-            onChange={(e) => setCode(e.target.value)}
-            placeholder={t("voucher.redeemPlaceholder")}
-            aria-label={t("voucher.redeemPlaceholder")}
-            autoComplete="off"
-            spellCheck={false}
-          />
-          <button className="voucher-btn voucher-btn--primary" type="submit" disabled={busy || !code.trim()}>
-            {t("voucher.redeem")}
-          </button>
-        </div>
-        {redeemError && (
-          <p className="voucher-error" role="alert">
-            {t(`voucher.err.${redeemError}`)}
-          </p>
-        )}
-      </form>
     </div>
   );
 }

@@ -10,11 +10,12 @@ import {
 } from "react-icons/hi2";
 import VoucherGate from "./VoucherGate.jsx";
 import { useLang } from "../uiText.jsx";
+import { useVoucher } from "../voucherContext.jsx";
 
 export default function ExamDetail({
   exam,
   candidateName,
-  avatarUrl,
+  avatarData,
   onBack,
   onStart,
   locked,
@@ -24,12 +25,16 @@ export default function ExamDetail({
   canChooseRange,
 }) {
   const { t } = useLang();
+  const { redeem } = useVoucher();
   const Icon = exam.icon;
   const [avatarFailed, setAvatarFailed] = useState(false);
   const [showAnswers, setShowAnswers] = useState(false);
   const [randomize, setRandomize] = useState(false);
   const [rangeFrom, setRangeFrom] = useState(1);
   const [rangeTo, setRangeTo] = useState(exam.questionCount);
+  const [voucherCode, setVoucherCode] = useState("");
+  const [redeemError, setRedeemError] = useState(null);
+  const [redeemBusy, setRedeemBusy] = useState(false);
 
   const hasOptions = canChooseRange || canRandomize || canShowAnswers;
 
@@ -37,6 +42,19 @@ export default function ExamDetail({
     const from = Math.min(Math.max(1, rangeFrom || 1), exam.questionCount);
     const to = Math.min(Math.max(from, rangeTo || exam.questionCount), exam.questionCount);
     onStart({ showAnswers, randomize, rangeFrom: from, rangeTo: to });
+  };
+
+  const submitRedeem = async (e) => {
+    e.preventDefault();
+    setRedeemBusy(true);
+    const result = await redeem(voucherCode, examId);
+    setRedeemBusy(false);
+    if (result.ok) {
+      setVoucherCode("");
+      setRedeemError(null);
+    } else {
+      setRedeemError(result.reason);
+    }
   };
 
   return (
@@ -94,10 +112,10 @@ export default function ExamDetail({
         </div>
 
         <div className="exam-detail-candidate">
-          {avatarUrl && !avatarFailed ? (
+          {avatarData && !avatarFailed ? (
             <img
               className="exam-detail-candidate-avatar"
-              src={avatarUrl}
+              src={avatarData}
               alt=""
               onError={() => setAvatarFailed(true)}
             />
@@ -109,7 +127,36 @@ export default function ExamDetail({
 
         <div className="exam-detail-below">
           {locked ? (
-            <VoucherGate fullName={candidateName} examId={examId} />
+            <>
+              <form className="voucher-block exam-detail-voucher-insert" onSubmit={submitRedeem}>
+                <span className="voucher-label">{t("voucher.redeemLabel")}</span>
+                <div className="voucher-code">
+                  <textarea
+                    className="voucher-code-text voucher-code-input"
+                    rows={4}
+                    value={voucherCode}
+                    onChange={(e) => setVoucherCode(e.target.value)}
+                    placeholder={t("voucher.redeemPlaceholder")}
+                    aria-label={t("voucher.redeemPlaceholder")}
+                    autoComplete="off"
+                    spellCheck={false}
+                  />
+                  <button
+                    className="voucher-btn voucher-btn--primary"
+                    type="submit"
+                    disabled={redeemBusy || !voucherCode.trim()}
+                  >
+                    {t("voucher.redeem")}
+                  </button>
+                </div>
+                {redeemError && (
+                  <p className="voucher-error" role="alert">
+                    {t(`voucher.err.${redeemError}`)}
+                  </p>
+                )}
+              </form>
+              <VoucherGate fullName={candidateName} examId={examId} />
+            </>
           ) : (
             <>
               <p className="exam-start-warning">
@@ -130,6 +177,7 @@ export default function ExamDetail({
                           max={exam.questionCount}
                           value={rangeFrom}
                           onChange={(e) => setRangeFrom(Number(e.target.value))}
+                          onWheel={(e) => e.currentTarget.blur()}
                           aria-label={t("examStart.rangeFrom")}
                         />
                         <span className="exam-start-range-sep">–</span>
@@ -140,6 +188,7 @@ export default function ExamDetail({
                           max={exam.questionCount}
                           value={rangeTo}
                           onChange={(e) => setRangeTo(Number(e.target.value))}
+                          onWheel={(e) => e.currentTarget.blur()}
                           aria-label={t("examStart.rangeTo")}
                         />
                       </div>

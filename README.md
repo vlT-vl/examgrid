@@ -8,7 +8,7 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/version-0.1.1--R021026-b23b3f?style=flat-square" alt="version"/>
+  <img src="https://img.shields.io/badge/version-0.1.2--R051026-b23b3f?style=flat-square" alt="version"/>
   <img src="https://img.shields.io/badge/react-19-61DAFB?style=flat-square&logo=react&logoColor=white" alt="react"/>
   <img src="https://img.shields.io/badge/vite-8-646CFF?style=flat-square&logo=vite&logoColor=white" alt="vite"/>
   <img src="https://img.shields.io/badge/license-proprietary-critical?style=flat-square" alt="license"/>
@@ -34,7 +34,7 @@ There is no application backend. The exam catalog, the account list and every ex
 | **Home** | A left-hand column of category filter pills (icon + label, one per category + "All") next to a fluid exam card grid, sourced from the live catalog on [examgrid.exams](https://github.com/vlT-vl/examgrid.exams) and filtered down to what the logged-in account is allowed to see (`examAccess` on its account record, see Permissions below). Each category carries the vendor's own logo and brand color where the registry provides one (e.g. Red Hat, Nutanix, Proxmox, VMware), falling back to a generated shade of green otherwise. Each card shows the exam's icon, category, code, title, description, its duration/question count and, when the registry provides one, a small pill with the exam content's last-update date. A search field next to the title (an icon that expands on hover) filters by title, code, description or category, combined with the active category pill. Title, filter column and cards animate in on load, cards staggered one after another. On desktop, the navbar, footer and category filters stay fixed while only the card grid scrolls, with its scrollbar visually hidden; on narrow screens the filter column stacks above the grid and the whole page scrolls normally |
 | **Exam detail** | One card with everything about the picked exam: icon, category (next to it, the same last-update pill as on the card, when available), code, title, description, duration/question count and the candidate identity (read from the logged-in account, no separate field). A voucher request sits below it, gating the rest (see Voucher); once unlocked, per-account settings appear in the same card — a question range (defaults to the full set), randomizing question and answer order (off by default), and, only for accounts explicitly authorized for it, showing correct answers while answering — followed by "Avvia Esame" to start |
 | **Voucher** | Starting a specific exam requires a voucher obtained from the administrator **for that exam** — a voucher only unlocks the exam it was issued for, not the rest of the catalog. Collapsed into a small pill by default inside the exam detail card — clicking it cross-fades into the full panel, styled after the same interaction in [`nxget-app-portal`](../nxget-app-portal). The candidate's name and the target exam are read automatically (no typing it in); a request code is generated to send to the administrator, who issues the voucher in return. Once entered, the voucher stays usable on that device for that exam until it expires — no need to enter it again until then |
-| **Exam** | A single centered panel, widening further on large screens, with its own header (exam title, countdown and elapsed-time clocks, an "End exam" action that asks for confirmation and jumps straight to the summary, scored on whatever answers were given so far) and footer (question counter, Back/Next/Finish). Multi-choice questions (the required number of answers per question is validated before advancing) with full-width, lettered answer rows, drawn from the range chosen on the exam detail page, a countdown timer based on the duration declared in the exam file (fallback 120 minutes). If "show correct answers" was enabled, each question gets an eye-icon button that reveals that one question's correct answer on click — hidden again on the next question, never shown automatically |
+| **Exam** | A single centered panel, widening further on large screens, with its own header (exam title, countdown and elapsed-time clocks, an "End exam" action that asks for confirmation and jumps straight to the summary, scored on whatever answers were given so far) and footer (question counter, Back/Next/Finish). Multi-choice questions (the required number of answers per question is validated before advancing) with full-width, lettered answer rows, drawn from the range chosen on the exam detail page, a countdown timer based on the duration declared in the exam file (fallback 120 minutes). If "show correct answers" was enabled, each question gets an eye-icon button that reveals that one question's correct answer on click — hidden again on the next question, never shown automatically. The whole attempt (questions, answers given so far, elapsed/remaining time) is continuously snapshotted to `sessionStorage`; an accidental page reload or browser close resumes the exam exactly where it left off instead of losing it, and the browser's own "leave site?" prompt guards against navigating away mid-exam by mistake |
 | **Summary** | Animated entrance for the whole report card. Final score out of 500, pass/fail outcome (350 threshold), elapsed and remaining time, a button to download a self-contained HTML report (styles included, same language as the interface) named after the candidate and the date/time. Accounts explicitly authorized for it also get a collapsible "Review answers" section, inside the card and the downloaded report alike, with a per-question table of the question, the candidate's answer and the correct one |
 | **History** | Per-user history of completed attempts for the current browser-tab session, opened from the `TbReport` icon in the navbar. Its compact modal presents each attempt as a two-tier card with six fields per tier — no horizontal table scrollbar — and can reopen the complete interactive report and answer review. The navbar badge counts only unseen attempts and clears as soon as the history is opened. Full snapshots, including questions and selected answers, can be exported as JSON and loaded again later; imported attempts are merged by ID with attempts already in the browser and with all newly completed ones. The archive uses `sessionStorage`, is isolated by username and is lost when the tab session ends unless exported |
 | **Interface** | Bilingual (Italian/English, `src/uiText.jsx`) with a toggle on the login screen and in the navbar; light/dark theme with a toggle on the login screen and in the navbar; a version/build info modal — styled after [`nxget-app-portal`](../nxget-app-portal)'s, with its own large `AnimatedLogo` — opens both from the navbar's info button and from the version pill in the footer; fully responsive layout (desktop and mobile), footer pinned to the bottom of the viewport on short pages, centered (logo, copyright, version pill). Interface text is not selectable, except for the voucher request code and the full-voucher input where selection/copying is required |
@@ -70,7 +70,8 @@ examgrid/
     ├── lib/
     │   ├── examsCrypto.js     # reads protected data from examgrid.exams (client side)
     │   ├── voucher.js         # voucher request + redemption (client side)
-    │   └── examHistory.js     # per-user sessionStorage archive, JSON validation/merge/export helpers
+    │   ├── examHistory.js     # per-user sessionStorage archive, JSON validation/merge/export helpers
+    │   └── examProgress.js    # per-user sessionStorage snapshot of the exam in progress, resumed after an accidental reload
     ├── css/
     │   ├── styles.css         # the whole app's styles
     │   └── AnimatedLogo.css   # AnimatedLogo.jsx's own stylesheet — still a separate file, see below
@@ -149,9 +150,9 @@ Under design for the next phase, evolving the current interface toward the layou
 
 | Field | Value |
 |---|---|
-| Version | 0.1.1 |
-| Build | R021026 |
-| Updated | 2 October 2026 |
+| Version | 0.1.2 |
+| Build | R051026 |
+| Updated | 5 October 2026 |
 
 ---
 

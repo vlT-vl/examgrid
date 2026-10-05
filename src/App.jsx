@@ -41,6 +41,7 @@ import {
   writeExamHistory,
   writeSeenHistoryIds,
 } from "./lib/examHistory.js";
+import { readExamProgress, writeExamProgress, clearExamProgress } from "./lib/examProgress.js";
 import pkgjson from "../package.json"
 import "./css/styles.css";
 
@@ -189,11 +190,12 @@ export default function App() {
   const [historyEntries, setHistoryEntries] = useState([]);
   const [unreadHistoryCount, setUnreadHistoryCount] = useState(0);
   const [reportCompletedAt, setReportCompletedAt] = useState(null);
-  const [reportAvatarUrl, setReportAvatarUrl] = useState("");
+  const [reportAvatarData, setReportAvatarData] = useState("");
   const [splashMinDelayDone, setSplashMinDelayDone] = useState(false);
   const [splashExiting, setSplashExiting] = useState(false);
   const [splashGone, setSplashGone] = useState(false);
   const splashExitTriggered = useRef(false);
+  const progressRestoreAttempted = useRef(false);
   const currentUser = usersData?.users?.find((user) => user.username === loggedInUser);
 
   const toggleTheme = () => {
@@ -215,6 +217,69 @@ export default function App() {
     setHistoryEntries(entries);
     setUnreadHistoryCount(entries.filter((entry) => !seenIds.has(entry.id)).length);
   }, [loggedInUser]);
+
+  useEffect(() => {
+    if (progressRestoreAttempted.current) return;
+    if (!loggedInUser || dataStatus !== "ready") return;
+    progressRestoreAttempted.current = true;
+    const saved = readExamProgress(loggedInUser);
+    if (!saved) return;
+    const rawExam = catalog.exams.find((exam) => exam.id === saved.examId);
+    if (!rawExam) {
+      clearExamProgress(loggedInUser);
+      return;
+    }
+    setSelectedExam(decorateExam(rawExam, lang, catalog.categories));
+    setQuestions(saved.questions);
+    setExamTitle(saved.examTitle);
+    setCandidateName(saved.candidateName);
+    setCurrentIndex(saved.currentIndex);
+    setSelectedAnswers(saved.selectedAnswers);
+    setExamDuration(saved.examDuration);
+    setRemainingTime(saved.remainingTime);
+    setElapsedTime(saved.elapsedTime);
+    setShowAnswers(saved.showAnswers);
+    setView("exam");
+  }, [loggedInUser, dataStatus, catalog, lang]);
+
+  useEffect(() => {
+    if (view !== "exam" || !loggedInUser || !selectedExam) return;
+    writeExamProgress(loggedInUser, {
+      examId: selectedExam.id,
+      examTitle,
+      candidateName,
+      currentIndex,
+      selectedAnswers,
+      questions,
+      examDuration,
+      remainingTime,
+      elapsedTime,
+      showAnswers,
+    });
+  }, [
+    view,
+    loggedInUser,
+    selectedExam,
+    examTitle,
+    candidateName,
+    currentIndex,
+    selectedAnswers,
+    questions,
+    examDuration,
+    remainingTime,
+    elapsedTime,
+    showAnswers,
+  ]);
+
+  useEffect(() => {
+    if (view !== "exam") return;
+    const handler = (event) => {
+      event.preventDefault();
+      event.returnValue = "";
+    };
+    window.addEventListener("beforeunload", handler);
+    return () => window.removeEventListener("beforeunload", handler);
+  }, [view]);
 
   const splashReadyToExit = dataStatus !== "loading" && splashMinDelayDone;
 
@@ -239,6 +304,7 @@ export default function App() {
   };
 
   const goHome = () => {
+    clearExamProgress(loggedInUser);
     setView("home");
     setSelectedExam(null);
     setQuestions([]);
@@ -252,7 +318,7 @@ export default function App() {
     setExamDuration(120);
     setShowAnswers(false);
     setReportCompletedAt(null);
-    setReportAvatarUrl("");
+    setReportAvatarData("");
   };
 
   const endExam = ({ finalRemainingTime = remainingTime } = {}) => {
@@ -272,7 +338,7 @@ export default function App() {
       },
       candidate: {
         name: candidateName,
-        avatarUrl: currentUser?.avatarUrl ?? "",
+        avatarData: currentUser?.avatarData ?? "",
       },
       result: {
         correctCount: score,
@@ -291,7 +357,7 @@ export default function App() {
 
     setCorrectCount(score);
     setReportCompletedAt(completedAt);
-    setReportAvatarUrl(currentUser?.avatarUrl ?? "");
+    setReportAvatarData(currentUser?.avatarData ?? "");
     setHistoryEntries((current) => {
       const next = mergeExamHistory(current, [entry]);
       try {
@@ -300,6 +366,7 @@ export default function App() {
       return next;
     });
     setUnreadHistoryCount((count) => count + 1);
+    clearExamProgress(loggedInUser);
     setView("summary");
   };
 
@@ -395,11 +462,14 @@ export default function App() {
       setQuestions(pool);
       setExamTitle(parsed.title);
       setCandidateName(name);
+      setCurrentIndex(0);
+      setSelectedAnswers({});
       setExamDuration(parsed.time || 120);
       setRemainingTime((parsed.time || 120) * 60);
+      setElapsedTime(0);
       setShowAnswers(Boolean(settings?.showAnswers));
       setReportCompletedAt(null);
-      setReportAvatarUrl(currentUser?.avatarUrl ?? "");
+      setReportAvatarData(currentUser?.avatarData ?? "");
       setView("exam");
     } catch (err) {
       alert(t("exam.loadError", { message: err.message }));
@@ -459,7 +529,7 @@ export default function App() {
     setRemainingTime(entry.timing.remainingTime);
     setExamDuration(entry.timing.durationMinutes || 120);
     setReportCompletedAt(entry.completedAt);
-    setReportAvatarUrl(entry.candidate.avatarUrl || "");
+    setReportAvatarData(entry.candidate.avatarData || "");
     setShowHistory(false);
     setView("summary");
   };
@@ -469,7 +539,7 @@ export default function App() {
       {view !== "exam" && (
         <Navbar
           username={displayName}
-          avatarUrl={currentUser?.avatarUrl}
+          avatarData={currentUser?.avatarData}
           onHome={goHome}
           onLogout={handleLogout}
           onInfo={() => setShowInfo(true)}
@@ -497,7 +567,7 @@ export default function App() {
         <ExamDetail
           exam={selectedExam}
           candidateName={displayName}
-          avatarUrl={currentUser?.avatarUrl}
+          avatarData={currentUser?.avatarData}
           onBack={() => setView("home")}
           onStart={(settings) => loadExamData(selectedExam.url, displayName, voucher.record?.key, settings)}
           locked={!voucher.isValidFor(selectedExam.id)}
@@ -533,11 +603,11 @@ export default function App() {
               </div>
               <div className="exam-panel-timers">
                 <Timer
-                  duration={examDuration * 60}
+                  duration={remainingTime}
                   onTimeUp={handleTimeUp}
                   onTick={(sec) => setRemainingTime(sec)}
                 />
-                <ElapsedTimer onTick={(sec) => setElapsedTime(sec)} />
+                <ElapsedTimer initialSeconds={elapsedTime} onTick={(sec) => setElapsedTime(sec)} />
               </div>
             </div>
 
@@ -586,7 +656,7 @@ export default function App() {
           icon={selectedExam?.icon}
           iconColor={selectedExam?.categoryStyle?.color}
           candidate={candidateName}
-          avatarUrl={reportAvatarUrl || currentUser?.avatarUrl}
+          avatarData={reportAvatarData || currentUser?.avatarData}
           score={correctCount}
           total={questions.length}
           elapsedTime={elapsedTime}

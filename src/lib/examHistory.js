@@ -9,7 +9,7 @@ const seenStorageKey = (username) => `${HISTORY_SEEN_PREFIX}${username}`;
 
 const isObject = (value) => value !== null && typeof value === "object" && !Array.isArray(value);
 
-const isValidQuestion = (question) => (
+export const isValidQuestion = (question) => (
   isObject(question)
   && typeof question.question === "string"
   && Array.isArray(question.answers)

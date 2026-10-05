@@ -13,7 +13,7 @@ import { useLang } from "../uiText.jsx";
 
 export default function Navbar({
   username,
-  avatarUrl,
+  avatarData,
   onHome,
   onLogout,
   onInfo,
@@ -60,10 +60,10 @@ export default function Navbar({
         </button>
 
         <span className="navbar-user">
-          {avatarUrl && !avatarFailed ? (
+          {avatarData && !avatarFailed ? (
             <img
               className="navbar-avatar"
-              src={avatarUrl}
+              src={avatarData}
               alt=""
               onError={() => setAvatarFailed(true)}
             />

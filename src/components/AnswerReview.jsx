@@ -1,5 +1,7 @@
 import {
   HiOutlineCheckCircle,
+  HiOutlineChevronLeft,
+  HiOutlineChevronRight,
   HiOutlineClipboardDocumentList,
   HiOutlineXCircle,
   HiXMark,
@@ -7,9 +9,12 @@ import {
 import { useLang } from "../uiText.jsx";
 
 const TOGGLE_ID = "summary-review-toggle";
+const PAGE_SIZE = 20;
+const pageRadioId = (n) => `review-page-${n}`;
 
 export default function AnswerReview({ questions, selectedAnswers }) {
   const { t } = useLang();
+  const totalPages = Math.max(1, Math.ceil(questions.length / PAGE_SIZE));
 
   const isCorrect = (q, userAnswers) =>
     userAnswers.length === q.answersnumber && userAnswers.every((a) => q.correctAnswers.includes(a));
@@ -21,6 +26,17 @@ export default function AnswerReview({ questions, selectedAnswers }) {
         <HiOutlineClipboardDocumentList className="review-pill-icon" aria-hidden="true" />
         {t("summary.review.pill")}
       </label>
+
+      {Array.from({ length: totalPages }, (_, n) => (
+        <input
+          key={n}
+          type="radio"
+          id={pageRadioId(n)}
+          name="review-page"
+          className="review-page-radio"
+          defaultChecked={n === 0}
+        />
+      ))}
 
       <div className="review-panel">
         <div className="review-panel-card">
@@ -49,8 +65,13 @@ export default function AnswerReview({ questions, selectedAnswers }) {
                 {questions.map((q, i) => {
                   const userAnswers = selectedAnswers[i] || [];
                   const correct = isCorrect(q, userAnswers);
+                  const pageIndex = Math.floor(i / PAGE_SIZE);
                   return (
-                    <tr key={i} className={correct ? "review-row--correct" : "review-row--incorrect"}>
+                    <tr
+                      key={i}
+                      data-page={pageIndex}
+                      className={correct ? "review-row--correct" : "review-row--incorrect"}
+                    >
                       <td data-label={t("summary.review.number")}>{i + 1}</td>
                       <td data-label={t("summary.review.question")}>{q.question}</td>
                       <td data-label={t("summary.review.yourAnswer")}>
@@ -76,6 +97,32 @@ export default function AnswerReview({ questions, selectedAnswers }) {
               </tbody>
             </table>
           </div>
+
+          {Array.from({ length: totalPages }, (_, n) => (
+            <div key={n} className="review-pagination" data-page-controls={n}>
+              {n > 0 ? (
+                <label htmlFor={pageRadioId(n - 1)} className="review-pagination-btn" aria-label={t("summary.review.prevPage")}>
+                  <HiOutlineChevronLeft aria-hidden="true" />
+                </label>
+              ) : (
+                <span className="review-pagination-btn review-pagination-btn--disabled" aria-hidden="true">
+                  <HiOutlineChevronLeft aria-hidden="true" />
+                </span>
+              )}
+              <span className="review-pagination-label">
+                {t("summary.review.pageOf", { page: n + 1, total: totalPages })}
+              </span>
+              {n < totalPages - 1 ? (
+                <label htmlFor={pageRadioId(n + 1)} className="review-pagination-btn" aria-label={t("summary.review.nextPage")}>
+                  <HiOutlineChevronRight aria-hidden="true" />
+                </label>
+              ) : (
+                <span className="review-pagination-btn review-pagination-btn--disabled" aria-hidden="true">
+                  <HiOutlineChevronRight aria-hidden="true" />
+                </span>
+              )}
+            </div>
+          ))}
         </div>
       </div>
     </div>

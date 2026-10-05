@@ -139,6 +139,9 @@ export const uiText = {
         correct: "Corretta",
         incorrect: "Errata",
         noAnswer: "Nessuna risposta",
+        prevPage: "Precedente",
+        nextPage: "Successiva",
+        pageOf: "Pagina {page} di {total}",
       },
     },
     history: {
@@ -315,6 +318,9 @@ export const uiText = {
         correct: "Correct",
         incorrect: "Incorrect",
         noAnswer: "No answer given",
+        prevPage: "Previous",
+        nextPage: "Next",
+        pageOf: "Page {page} of {total}",
       },
     },
     history: {
