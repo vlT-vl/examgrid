@@ -2,6 +2,10 @@
 
 Le funzionalità principali dell'app, in ordine cronologico inverso.
 
+## 2026-10-06
+
+- Le card e i filtri di categoria ora riconoscono anche esami AWS, Debian, Ubuntu, Fedora, Kubernetes, OpenShift, Docker, Ansible, Google Cloud, Linux (generico), Cisco e Citrix, con l'icona del vendor corretta al posto del simbolo generico usato finora per queste categorie.
+
 ## 2026-10-05
 
 - Le foto profilo non dipendono più da un link esterno a LinkedIn (che tra l'altro scadeva): ora arrivano già incorporate e cifrate nel registro utenti, quindi compaiono sempre — navbar, dettaglio esame, riepilogo e anche nel report HTML scaricato — senza alcun fetch a runtime verso servizi terzi.

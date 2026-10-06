@@ -1,6 +1,20 @@
 import React, { useState, useEffect, useLayoutEffect, useRef } from "react";
-import { SiNutanix, SiProxmox } from "react-icons/si";
-import { FaRedhat } from "react-icons/fa";
+import {
+  SiNutanix,
+  SiProxmox,
+  SiDebian,
+  SiUbuntu,
+  SiFedora,
+  SiKubernetes,
+  SiRedhatopenshift,
+  SiDocker,
+  SiAnsible,
+  SiGooglecloud,
+  SiLinux,
+  SiCisco,
+  SiCitrix,
+} from "react-icons/si";
+import { FaRedhat, FaAws } from "react-icons/fa";
 import { GrVmware } from "react-icons/gr";
 import { RiCloseCircleLine } from "react-icons/ri";
 import S2ELogo from "./components/S2ELogo.jsx";
@@ -74,6 +88,18 @@ const ICON_MAP = {
   nutanix: SiNutanix,
   proxmox: SiProxmox,
   s2e: S2ELogo,
+  aws: FaAws,
+  debian: SiDebian,
+  ubuntu: SiUbuntu,
+  fedora: SiFedora,
+  kubernetes: SiKubernetes,
+  openshift: SiRedhatopenshift,
+  docker: SiDocker,
+  ansible: SiAnsible,
+  googlecloud: SiGooglecloud,
+  linux: SiLinux,
+  cisco: SiCisco,
+  citrix: SiCitrix,
 };
 
 const CATEGORY_PALETTE = ["#3fae6a", "#66bb6a", "#2e8b57", "#7fd858", "#4c9a5b", "#57b894"];
@@ -100,6 +126,9 @@ function categoryStyle(key, brandColor) {
 const CATEGORY_LABEL_OVERRIDES = {
   vmware: "VMware",
   s2e: "S2E",
+  aws: "AWS",
+  openshift: "OpenShift",
+  googlecloud: "Google Cloud",
 };
 
 function categoryLabel(key) {

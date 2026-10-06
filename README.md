@@ -8,7 +8,7 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/version-0.1.2--R051026-b23b3f?style=flat-square" alt="version"/>
+  <img src="https://img.shields.io/badge/version-0.1.2--R061026-b23b3f?style=flat-square" alt="version"/>
   <img src="https://img.shields.io/badge/react-19-61DAFB?style=flat-square&logo=react&logoColor=white" alt="react"/>
   <img src="https://img.shields.io/badge/vite-8-646CFF?style=flat-square&logo=vite&logoColor=white" alt="vite"/>
   <img src="https://img.shields.io/badge/license-proprietary-critical?style=flat-square" alt="license"/>
@@ -151,8 +151,8 @@ Under design for the next phase, evolving the current interface toward the layou
 | Field | Value |
 |---|---|
 | Version | 0.1.2 |
-| Build | R051026 |
-| Updated | 5 October 2026 |
+| Build | R061026 |
+| Updated | 6 October 2026 |
 
 ---
 
